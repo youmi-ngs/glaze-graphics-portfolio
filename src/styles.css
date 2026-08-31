@@ -12,7 +12,13 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  scroll-snap-type: y proximity;
+  /* reserve the scrollbar's space so the fixed nav and page content share the
+     same width (prevents an uneven left/right gap on the nav) */
+  scrollbar-gutter: stable;
+}
 
 body {
   background: var(--bg);
@@ -20,6 +26,13 @@ body {
   font-family: "Inter", system-ui, -apple-system, "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+}
+
+/* No horizontal scroll — keeps the fixed galaxy bg covering the full width */
+html, body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 /* ---------- Galaxy background ---------- */
@@ -35,13 +48,15 @@ body {
 
 /* ---------- Nav ---------- */
 .nav {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 10;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.1rem clamp(1.2rem, 4vw, 3rem);
+  padding: 1.1rem clamp(1.6rem, 6vw, 5rem);
   background: color-mix(in srgb, var(--bg) 72%, transparent);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--line);
@@ -66,145 +81,173 @@ body {
 }
 .nav nav a:hover { color: var(--fg); }
 
-/* ---------- Layout ---------- */
-section {
-  max-width: var(--maxw);
-  margin: 0 auto;
-  padding: clamp(3.5rem, 9vw, 7rem) clamp(1.2rem, 4vw, 3rem);
-}
-
-h2 {
-  font-family: "Fraunces", serif;
-  font-weight: 400;
-  font-size: clamp(1.6rem, 4vw, 2.3rem);
-  letter-spacing: -0.01em;
-}
-
-/* ---------- Hero ---------- */
-.hero {
+/* ---------- Full-screen sections ---------- */
+/* Each section fills the viewport (minus nav) and snaps into place. */
+.screen {
   position: relative;
-  max-width: none;
-  min-height: calc(100vh - var(--nav-h, 0px));
+  min-height: 100svh;
+  scroll-margin-top: var(--nav-h, 0px);
+  scroll-snap-align: start;
   display: flex;
-  align-items: flex-end;
-  padding: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   overflow: hidden;
+  padding: clamp(2rem, 6vw, 4rem) clamp(1.2rem, 4vw, 3rem);
+  text-align: center;
+}
+
+/* Big Inter-bold section titles (matches the wireframe's oversized type). */
+.screen-title {
+  font-family: "hoverunit", "Inter", sans-serif;
+  font-weight: 400;
+  font-size: clamp(2.4rem, 9vw, 8rem);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  color: #fff;
+  text-shadow: 0 2px 40px rgba(0, 0, 0, 0.55);
+}
+
+/* ---------- Scroll-down arrow ---------- */
+.scroll-arrow {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(1.4rem, 4vh, 3rem);
+  transform: translateX(-50%);
+  z-index: 3;
+  display: inline-flex;
+  padding: 0.6rem;
+  line-height: 0;
+  opacity: 0.75;
+  transition: opacity 0.2s;
+  animation: arrow-bob 2s ease-in-out infinite;
+}
+.scroll-arrow:hover { opacity: 1; }
+.scroll-arrow img {
+  display: block;
+  /* Figma asset points up → flip to point down. */
+  transform: scaleY(-1);
+}
+@keyframes arrow-bob {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(6px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scroll-arrow { animation: none; }
+}
+
+/* ---------- 1. Hero ---------- */
+/* Needs a *definite* height so <ASCIIText>'s absolute 100%-height canvas can
+   resolve its size (min-height alone leaves it 0 and the hero renders blank). */
+.hero {
+  padding: 0;
+  height: 100svh;
   background-image: url("/images/hero.jpg");
   background-size: cover;
   background-position: center 40%;
-  color: #fff;
 }
-/* blend the hero into the dark page + readability scrim */
+/* readability scrim: blend the hero image into the dark page toward the edges */
 .hero::after {
   content: "";
   position: absolute;
   inset: 0;
+  z-index: 1;
+  pointer-events: none;
   background: linear-gradient(
     to top,
     var(--bg) 0%,
-    rgba(8, 10, 22, 0.5) 30%,
+    rgba(8, 10, 22, 0.45) 28%,
     rgba(8, 10, 22, 0.05) 62%,
     rgba(8, 10, 22, 0) 100%
   );
 }
-.hero-inner {
-  position: relative;
-  z-index: 1;
-  max-width: var(--maxw);
-  width: 100%;
-  margin: 0 auto;
-  padding: clamp(2.5rem, 6vw, 4.5rem) clamp(1.2rem, 4vw, 3rem);
-}
-.eyebrow {
-  text-transform: uppercase;
-  letter-spacing: 0.22em;
-  font-size: 0.72rem;
-  color: #fff;
-  font-weight: 600;
-  margin-bottom: 1.4rem;
-  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.45);
-}
-.hero h1 {
-  font-family: "Fraunces", serif;
-  font-weight: 300;
-  font-size: clamp(2.8rem, 11vw, 6.5rem);
-  line-height: 0.98;
-  letter-spacing: -0.02em;
-  text-shadow: 0 2px 30px rgba(0, 0, 0, 0.4);
-}
-.lede {
-  margin-top: 1.8rem;
-  max-width: 34ch;
-  font-size: clamp(1rem, 2.2vw, 1.2rem);
-  color: rgba(255, 255, 255, 0.9);
-  text-shadow: 0 1px 16px rgba(0, 0, 0, 0.5);
-}
 
-/* ---------- Work ---------- */
-.section-head {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  align-items: baseline;
-  justify-content: space-between;
-  margin-bottom: 2.4rem;
-}
-.filters { display: flex; gap: 0.4rem; }
-.filter {
-  border: 1px solid var(--line);
-  background: transparent;
-  color: var(--muted);
-  padding: 0.4rem 0.9rem;
-  border-radius: 999px;
-  font: inherit;
-  font-size: 0.85rem;
+/* ---------- 2. Who is Youmi? (circular text + portrait) ---------- */
+.ring-wrap {
+  position: relative;
+  width: min(78vmin, 560px);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  /* button reset */
+  appearance: none;
+  border: 0;
+  background: none;
+  padding: 0;
+  color: inherit;
   cursor: pointer;
-  transition: all 0.2s;
+  /* Scale the whole ring (text + circle together) on hover so the gap between
+     the circle and the text ring stays identical in both states. */
+  transition: transform 0.45s ease;
 }
-.filter:hover { color: var(--fg); border-color: rgba(255,255,255,0.28); }
-.filter.is-active {
-  color: #0a0c18;
-  background: var(--iris);
-  border-color: transparent;
-  font-weight: 600;
+.ring-wrap.is-hover { transform: scale(1.10); }
+.ring-wrap:focus-visible { outline: 2px solid #6ec6ff; outline-offset: 8px; border-radius: 50%; }
+.ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  animation: ring-spin 26s linear infinite;
+  transition: transform 0.4s ease;
+}
+/* speed up the spin feel + glow the portrait on hover (no separate scale —
+   the whole .ring-wrap scales, keeping the circle↔text gap constant) */
+.ring-wrap.is-hover .ring { animation-duration: 12s; }
+.ring-wrap.is-hover .ring-portrait { box-shadow: 0 0 60px -10px rgba(120, 140, 255, 0.5); }
+@keyframes ring-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .ring { animation: none; }
+}
+.ring-text {
+  fill: #fff;
+  font-family: "jaf-mashine", "Inter", sans-serif;
+  font-weight: 400;
+  font-size: 54px;
+  letter-spacing: 0.1em;
+}
+.ring { overflow: visible; }
+.ring-portrait {
+  position: relative;
+  width: 58%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 40%, #2a2d4a, #10121f);
+  border: 1px solid var(--line);
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+  letter-spacing: 1em;
+  overflow: hidden;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+.ring-portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
-.grid {
-  columns: 3 260px;
-  column-gap: 1.4rem;
+/* ---------- 3. Youmi's Works (full-bleed tiles + overlaid title) ---------- */
+.work { padding: 0; }
+.work-grid {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
 }
-.card {
-  break-inside: avoid;
-  margin-bottom: 1.4rem;
-}
-.thumb {
-  position: relative;
+.tile {
   width: 100%;
-  aspect-ratio: var(--a, 1);
-  border-radius: 12px;
-  border: 1px solid var(--line);
-  overflow: hidden;
-  transition: transform 0.35s ease, box-shadow 0.35s ease;
+  height: 100%;
+  transition: transform 0.4s ease, filter 0.4s ease;
 }
-.card:hover .thumb {
-  transform: translateY(-4px);
-  box-shadow: 0 18px 50px -20px rgba(150, 130, 255, 0.55);
-}
-.card figcaption {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 1rem;
-  margin-top: 0.8rem;
-  font-size: 0.9rem;
-}
-.card figcaption em {
-  font-style: normal;
-  font-size: 0.78rem;
-  background: var(--iris);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+.tile:hover { transform: scale(1.02); filter: brightness(1.12); z-index: 1; }
+.work .screen-title {
+  position: relative;
+  z-index: 2;
+  color: #fff;
+  mix-blend-mode: difference;
 }
 
 /* placeholder gradients — replace with real images later */
@@ -215,53 +258,124 @@ h2 {
 .g5 { background: linear-gradient(135deg, #b6a6ff, #4a3a8f); }
 .g6 { background: linear-gradient(135deg, #7fe0c4, #1f4a52); }
 
-.hint {
-  margin-top: 1.5rem;
-  font-size: 0.82rem;
-  color: var(--muted);
+/* ---------- 4. Contact + footer ---------- */
+/* Zero the section's own padding so the footer can span the full viewport
+   width; the contact copy gets its inset back via .contact-inner. */
+.contact { justify-content: space-between; padding: 0; }
+.contact-inner {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.6rem;
+  padding: clamp(2rem, 6vw, 4rem) clamp(1.2rem, 4vw, 3rem);
 }
-.hint code {
-  font-family: ui-monospace, "SF Mono", Menlo, monospace;
-  background: var(--card);
-  border: 1px solid var(--line);
-  padding: 0.05rem 0.35rem;
-  border-radius: 5px;
-}
-
-/* ---------- About ---------- */
-.about { border-top: 1px solid var(--line); }
-.about p { max-width: 58ch; margin-top: 1.2rem; font-size: 1.05rem; }
-.muted { color: var(--muted); font-size: 0.9rem !important; }
-
-/* ---------- Contact ---------- */
-.contact {
-  border-top: 1px solid var(--line);
-  text-align: center;
-  position: relative;
-}
-.contact p { color: var(--muted); margin-top: 0.8rem; }
+.contact-title { font-size: clamp(1.8rem, 6vw, 5.5rem); }
 .mail {
-  display: inline-block;
-  margin-top: 1.6rem;
-  font-family: "Fraunces", serif;
-  font-size: clamp(1.4rem, 5vw, 2.6rem);
-  background: var(--iris);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  font-family: "Inter", sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.1rem, 3vw, 2.2rem);
+  color: var(--fg);
   text-decoration: none;
   transition: opacity 0.2s;
 }
-.mail:hover { opacity: 0.75; }
+.mail:hover { opacity: 0.7; text-decoration: underline; }
 
-/* ---------- Footer ---------- */
 footer {
-  max-width: var(--maxw);
-  margin: 0 auto;
-  padding: 2rem clamp(1.2rem, 4vw, 3rem);
+  width: 100%;
   border-top: 1px solid var(--line);
-  display: flex;
-  justify-content: space-between;
+  background: var(--bg-2);
   font-size: 0.82rem;
   color: var(--muted);
+}
+.footer-inner {
+  /* full-bleed like the nav so their side gaps match (same clamp padding) */
+  padding: 1.6rem clamp(1.6rem, 6vw, 5rem);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem 1.6rem;
+}
+.footer-brand {
+  font-family: "Fraunces", serif;
+  color: var(--fg);
+  text-decoration: none;
+}
+.footer-social { display: flex; gap: 1.1rem; }
+.footer-social a {
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.footer-social a:hover,
+.footer-brand:hover { color: var(--fg); }
+
+@media (max-width: 640px) {
+  .work-grid { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(3, 1fr); }
+}
+
+/* ---------- About modal ---------- */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: clamp(1rem, 4vw, 2.5rem);
+  background: rgba(4, 5, 12, 0.62);
+  backdrop-filter: blur(6px);
+  animation: modal-fade 0.2s ease;
+}
+.modal-panel {
+  position: relative;
+  width: min(92vw, 1000px);
+  height: min(84vh, 680px);
+  border-radius: 30px;
+  border: 1px solid var(--line);
+  background: rgba(18, 20, 42, 0.82);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 40px 120px -40px rgba(0, 0, 0, 0.8);
+  overflow: auto;
+  animation: modal-pop 0.24s cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+.modal-close {
+  position: absolute;
+  top: clamp(1rem, 3vw, 2.2rem);
+  left: clamp(1rem, 3vw, 2.2rem);
+  display: inline-flex;
+  padding: 0.5rem;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  line-height: 0;
+  opacity: 0.85;
+  transition: opacity 0.2s, transform 0.2s;
+}
+.modal-close:hover { opacity: 1; transform: rotate(90deg); }
+.modal-close img { display: block; transform: rotate(45deg); } /* asset is a "+" → rotate to × */
+.modal-body {
+  max-width: 62ch;
+  margin: 0 auto;
+  padding: clamp(4rem, 10vw, 6rem) clamp(1.6rem, 5vw, 4rem) clamp(2.5rem, 6vw, 4rem);
+}
+.modal-body h2 {
+  font-family: "hoverunit", "Inter", sans-serif;
+  font-weight: 400;
+  font-size: clamp(1.8rem, 5vw, 3rem);
+  letter-spacing: -0.02em;
+  color: #fff;
+  margin-bottom: 1.4rem;
+}
+.modal-body p { margin-top: 1.1rem; font-size: 1.05rem; color: var(--fg); }
+.modal-body .muted { color: var(--muted); font-size: 0.9rem; }
+
+@keyframes modal-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes modal-pop {
+  from { opacity: 0; transform: translateY(12px) scale(0.98); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .modal-backdrop, .modal-panel { animation: none; }
 }

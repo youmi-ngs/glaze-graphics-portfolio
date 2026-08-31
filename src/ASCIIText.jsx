@@ -246,7 +246,16 @@ class CanvAscii {
     this.scene = new THREE.Scene();
     this.mouse = { x: this.width / 2, y: this.height / 2 };
 
+    // Wave clock: advances at `waveSpeed`, eased toward `targetWaveSpeed`.
+    // Hovering the hero slows the waves (target 0.25); leaving restores 1.
+    this.clock = 0;
+    this.lastFrame = null;
+    this.waveSpeed = 1;
+    this.targetWaveSpeed = 1;
+
     this.onMouseMove = this.onMouseMove.bind(this);
+    this.onPointerEnter = () => { this.targetWaveSpeed = 0.25; };
+    this.onPointerLeave = () => { this.targetWaveSpeed = 1; };
   }
 
   async init() {
@@ -312,6 +321,8 @@ class CanvAscii {
 
     this.container.addEventListener('mousemove', this.onMouseMove);
     this.container.addEventListener('touchmove', this.onMouseMove);
+    this.container.addEventListener('pointerenter', this.onPointerEnter);
+    this.container.addEventListener('pointerleave', this.onPointerLeave);
   }
 
   setSize(w, h) {
@@ -347,23 +358,28 @@ class CanvAscii {
   }
 
   render() {
-    const time = new Date().getTime() * 0.001;
+    const now = new Date().getTime() * 0.001;
+    const dt = this.lastFrame == null ? 0 : now - this.lastFrame;
+    this.lastFrame = now;
+
+    // Ease wave speed toward its target, then advance the wave clock by it.
+    this.waveSpeed += (this.targetWaveSpeed - this.waveSpeed) * 0.08;
+    this.clock += dt * this.waveSpeed;
 
     this.textCanvas.render();
     this.texture.needsUpdate = true;
 
-    this.mesh.material.uniforms.uTime.value = Math.sin(time);
+    this.mesh.material.uniforms.uTime.value = Math.sin(this.clock);
 
     this.updateRotation();
     this.filter.render(this.scene, this.camera);
   }
 
   updateRotation() {
-    const x = Math.map(this.mouse.y, 0, this.height, 0.5, -0.5);
-    const y = Math.map(this.mouse.x, 0, this.width, -0.5, 0.5);
-
-    this.mesh.rotation.x += (x - this.mesh.rotation.x) * 0.05;
-    this.mesh.rotation.y += (y - this.mesh.rotation.y) * 0.05;
+    // Mouse-follow tilt disabled — keep the plane flat (color/hue still reacts
+    // to the mouse via AsciiFilter). Ease any residual rotation back to 0.
+    this.mesh.rotation.x += (0 - this.mesh.rotation.x) * 0.05;
+    this.mesh.rotation.y += (0 - this.mesh.rotation.y) * 0.05;
   }
 
   clear() {
@@ -392,6 +408,8 @@ class CanvAscii {
     }
     this.container.removeEventListener('mousemove', this.onMouseMove);
     this.container.removeEventListener('touchmove', this.onMouseMove);
+    this.container.removeEventListener('pointerenter', this.onPointerEnter);
+    this.container.removeEventListener('pointerleave', this.onPointerLeave);
     this.clear();
     if (this.renderer) {
       this.renderer.dispose();
