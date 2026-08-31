@@ -1,0 +1,267 @@
+:root {
+  --bg: #080a16;
+  --bg-2: #0d1022;
+  --fg: #f2f0f7;
+  --muted: #9a97b5;
+  --line: rgba(255, 255, 255, 0.1);
+  --card: #12142a;
+  --maxw: 1180px;
+  /* iridescent accent gradient (blue -> purple -> pink) */
+  --iris: linear-gradient(100deg, #6ec6ff 0%, #a78bfa 45%, #f0a6d8 100%);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: "Inter", system-ui, -apple-system, "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- Galaxy background ---------- */
+/* Fixed, full-viewport animated starfield sitting behind all content. */
+#galaxy-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+#galaxy-bg .galaxy-container { width: 100%; height: 100%; }
+#galaxy-bg canvas { display: block; width: 100%; height: 100%; }
+
+/* ---------- Nav ---------- */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.1rem clamp(1.2rem, 4vw, 3rem);
+  background: color-mix(in srgb, var(--bg) 72%, transparent);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+}
+.brand {
+  font-family: "Fraunces", serif;
+  font-weight: 500;
+  font-size: 1.15rem;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  background: var(--iris);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.nav nav { display: flex; gap: clamp(1rem, 3vw, 2.2rem); }
+.nav nav a {
+  text-decoration: none;
+  color: var(--muted);
+  font-size: 0.92rem;
+  transition: color 0.2s;
+}
+.nav nav a:hover { color: var(--fg); }
+
+/* ---------- Layout ---------- */
+section {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: clamp(3.5rem, 9vw, 7rem) clamp(1.2rem, 4vw, 3rem);
+}
+
+h2 {
+  font-family: "Fraunces", serif;
+  font-weight: 400;
+  font-size: clamp(1.6rem, 4vw, 2.3rem);
+  letter-spacing: -0.01em;
+}
+
+/* ---------- Hero ---------- */
+.hero {
+  position: relative;
+  max-width: none;
+  min-height: calc(100vh - var(--nav-h, 0px));
+  display: flex;
+  align-items: flex-end;
+  padding: 0;
+  overflow: hidden;
+  background-image: url("/images/hero.jpg");
+  background-size: cover;
+  background-position: center 40%;
+  color: #fff;
+}
+/* blend the hero into the dark page + readability scrim */
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    var(--bg) 0%,
+    rgba(8, 10, 22, 0.5) 30%,
+    rgba(8, 10, 22, 0.05) 62%,
+    rgba(8, 10, 22, 0) 100%
+  );
+}
+.hero-inner {
+  position: relative;
+  z-index: 1;
+  max-width: var(--maxw);
+  width: 100%;
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vw, 4.5rem) clamp(1.2rem, 4vw, 3rem);
+}
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  font-size: 0.72rem;
+  color: #fff;
+  font-weight: 600;
+  margin-bottom: 1.4rem;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.45);
+}
+.hero h1 {
+  font-family: "Fraunces", serif;
+  font-weight: 300;
+  font-size: clamp(2.8rem, 11vw, 6.5rem);
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+  text-shadow: 0 2px 30px rgba(0, 0, 0, 0.4);
+}
+.lede {
+  margin-top: 1.8rem;
+  max-width: 34ch;
+  font-size: clamp(1rem, 2.2vw, 1.2rem);
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 1px 16px rgba(0, 0, 0, 0.5);
+}
+
+/* ---------- Work ---------- */
+.section-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 2.4rem;
+}
+.filters { display: flex; gap: 0.4rem; }
+.filter {
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--muted);
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.filter:hover { color: var(--fg); border-color: rgba(255,255,255,0.28); }
+.filter.is-active {
+  color: #0a0c18;
+  background: var(--iris);
+  border-color: transparent;
+  font-weight: 600;
+}
+
+.grid {
+  columns: 3 260px;
+  column-gap: 1.4rem;
+}
+.card {
+  break-inside: avoid;
+  margin-bottom: 1.4rem;
+}
+.thumb {
+  position: relative;
+  width: 100%;
+  aspect-ratio: var(--a, 1);
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  overflow: hidden;
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+.card:hover .thumb {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 50px -20px rgba(150, 130, 255, 0.55);
+}
+.card figcaption {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  margin-top: 0.8rem;
+  font-size: 0.9rem;
+}
+.card figcaption em {
+  font-style: normal;
+  font-size: 0.78rem;
+  background: var(--iris);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* placeholder gradients — replace with real images later */
+.g1 { background: linear-gradient(135deg, #6ec6ff, #3a3fa0); }
+.g2 { background: linear-gradient(135deg, #a78bfa, #2a1e5c); }
+.g3 { background: linear-gradient(135deg, #f0a6d8, #7a2f6a); }
+.g4 { background: linear-gradient(135deg, #8ad9d0, #234b6e); }
+.g5 { background: linear-gradient(135deg, #b6a6ff, #4a3a8f); }
+.g6 { background: linear-gradient(135deg, #7fe0c4, #1f4a52); }
+
+.hint {
+  margin-top: 1.5rem;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+.hint code {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  background: var(--card);
+  border: 1px solid var(--line);
+  padding: 0.05rem 0.35rem;
+  border-radius: 5px;
+}
+
+/* ---------- About ---------- */
+.about { border-top: 1px solid var(--line); }
+.about p { max-width: 58ch; margin-top: 1.2rem; font-size: 1.05rem; }
+.muted { color: var(--muted); font-size: 0.9rem !important; }
+
+/* ---------- Contact ---------- */
+.contact {
+  border-top: 1px solid var(--line);
+  text-align: center;
+  position: relative;
+}
+.contact p { color: var(--muted); margin-top: 0.8rem; }
+.mail {
+  display: inline-block;
+  margin-top: 1.6rem;
+  font-family: "Fraunces", serif;
+  font-size: clamp(1.4rem, 5vw, 2.6rem);
+  background: var(--iris);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+.mail:hover { opacity: 0.75; }
+
+/* ---------- Footer ---------- */
+footer {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 2rem clamp(1.2rem, 4vw, 3rem);
+  border-top: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
