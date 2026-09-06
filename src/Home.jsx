@@ -3,12 +3,13 @@ import ASCIIText from './ASCIIText.jsx';
 import DecodeButton from './DecodeButton.jsx';
 import Modal from './Modal.jsx';
 import Footer from './Footer.jsx';
+import SocialIcons from './SocialIcons.jsx';
 import { WORKS, placeholderClass } from './works.js';
 
-// Featured works for the home teaser grid (up to 6). Falls back to the first
-// works if none are flagged.
+// Featured works for the home teaser grid (up to 6). `featured` is a 1-based
+// rank that sets the tile order; falls back to the first works if none flagged.
 const TEASER = (() => {
-  const flagged = WORKS.filter((w) => w.featured);
+  const flagged = WORKS.filter((w) => w.featured).sort((a, b) => a.featured - b.featured);
   return (flagged.length ? flagged : WORKS).slice(0, 6);
 })();
 
@@ -79,7 +80,7 @@ export default function Home() {
           <div className="work-grid" aria-hidden="true">
             {TEASER.map((w, i) => (
               <div
-                className={`tile ${w.img ? '' : placeholderClass(i)}`}
+                className={`tile ${w.img ? "" : placeholderClass(i)}`}
                 key={w.slug}
                 style={w.img ? { backgroundImage: `url(${w.img})` } : undefined}
               />
@@ -98,8 +99,9 @@ export default function Home() {
         <section id="contact" className="screen contact">
           <div className="contact-inner">
             <h2 className="screen-title contact-title">
-              DO&nbsp;YOU CONTACT&nbsp;YOUMI?
+              Youmi&rsquo;s&nbsp;Contact
             </h2>
+            <p className="contact-sub">Want to get in touch?</p>
             <a className="mail" href="mailto:youmi@glaze-graphics.space">
               youmi@glaze-graphics.space
             </a>
@@ -113,14 +115,28 @@ export default function Home() {
         <Modal onClose={() => setAboutOpen(false)} label="About Youmi">
           <div className="modal-body">
             <h2>Who is Youmi?</h2>
+
             <p>
-              Youmi Nagase — a graphic designer and photographer. From
-              editorial layouts and brand visuals to chasing light with a
-              camera, I love making things across media.
+              Hi, I&rsquo;m Youmi &mdash; a first-year university student based
+              in Tokyo.
             </p>
-            <p className="muted">
-              — Placeholder bio. This will be rewritten later.
+
+            <p>
+              I don&rsquo;t have a career yet, but I&rsquo;m working on it. My
+              goal is to become a designer, working across graphics and the web.<br />
+              Right now, I mentor teens in web design and direction at Life is
+              Tech!
             </p>
+
+            <p>
+              Photography is just for fun.
+            </p>
+
+            <p className="modal-wink">
+              This is only chapter one. Yoo-hoo! 👋
+            </p>
+
+            <SocialIcons className="modal-social" />
           </div>
         </Modal>
       )}

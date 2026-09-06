@@ -24,13 +24,13 @@ export default function Nav() {
 
   return (
     <header className="nav" ref={navRef}>
-      <a className="brand" href="/#top">
+      <Link className="brand" to="/#top">
         Glaze&nbsp;Graphics
-      </a>
+      </Link>
       <nav>
         <Link to="/works">Works</Link>
-        <a href="/#about">About</a>
-        <a href="/#contact">Contact</a>
+        <Link to="/#about">About</Link>
+        <Link to="/#contact">Contact</Link>
       </nav>
     </header>
   );

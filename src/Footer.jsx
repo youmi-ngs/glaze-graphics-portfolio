@@ -1,5 +1,8 @@
+import { SOCIALS } from "./social.js";
+
 // Shared full-width footer. Used at the bottom of both the home Contact section
-// and the Works page.
+// and the Works page. Social links are text-only here (icons live in the About
+// modal); order comes from SOCIALS.
 export default function Footer() {
   const year = new Date().getFullYear();
   return (
@@ -11,14 +14,11 @@ export default function Footer() {
         </span>
 
         <div className="footer-social">
-          <a href="https://github.com/youmi-ngs" target="_blank" rel="noopener noreferrer">GitHub</a>
-          {/* TODO: real handles — placeholders for now */}
-          <a href="https://instagram.com/glaze.graphics" target="_blank" rel="noopener noreferrer" aria-label="Instagram (TBD)">
-            Instagram
-          </a>
-          <a href="https://twitter.com/glaze_graphics" target="_blank" rel="noopener noreferrer" aria-label="Twitter (TBD)">
-            Twitter
-          </a>
+          {SOCIALS.map((s) => (
+            <a key={s.name} href={s.href} target="_blank" rel="noopener noreferrer">
+              {s.name}
+            </a>
+          ))}
         </div>
       </div>
     </footer>

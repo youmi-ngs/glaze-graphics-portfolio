@@ -9,7 +9,7 @@ function WorkCard({ work, index, onOpen }) {
   return (
     <button
       type="button"
-      className="work-card"
+      className={`work-card${work.title ? ' has-title' : ''}`}
       onClick={() => onOpen(work)}
       aria-label={`${work.title || 'Untitled'} — ${categoryLabel(work.category)}`}
     >
@@ -110,6 +110,22 @@ export default function WorksPage() {
     [filter]
   );
 
+  // While the detail modal is open, ←/→ browse to the previous/next work in the
+  // current filter (wraps around). Escape is handled by <Modal> itself.
+  useEffect(() => {
+    if (!active) return;
+    const onKey = (e) => {
+      if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+      const i = filtered.findIndex((w) => w.slug === active.slug);
+      if (i === -1) return;
+      const n = filtered.length;
+      const j = e.key === 'ArrowRight' ? (i + 1) % n : (i - 1 + n) % n;
+      setActive(filtered[j]);
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [active, filtered]);
+
   // Greedy masonry: drop each card into the currently shortest column (using its
   // aspect ratio ≈ rendered height), so columns finish at nearly equal heights —
   // tops aligned, no big empty gap at the bottom.
@@ -139,10 +155,6 @@ export default function WorksPage() {
       <main className="works-page">
         <header className="works-head">
           <h1 className="works-title">Works</h1>
-          <p className="works-lede">
-            Photography, design, and the odd site or app I&rsquo;ve built along
-            the way. Tap anything to take a closer look.
-          </p>
 
           <div className="works-filter" role="tablist" aria-label="Filter works">
             <button
