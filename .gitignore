@@ -5,3 +5,6 @@ dist/
 
 # original (full-res) work images — web copies live in public/images/works
 /assets-src/
+
+# personal notes / research / session handoff — not part of the site
+/notes/

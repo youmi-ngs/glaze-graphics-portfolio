@@ -105,7 +105,7 @@ html, body {
 .screen-title {
   font-family: "jaf-mashine", var(--sans);
   font-weight: 400;
-  font-size: clamp(2.4rem, 9vw, 8rem);
+  font-size: clamp(2rem, 7vw, 6rem);
   line-height: 1.02;
   letter-spacing: -0.02em;
   color: #fff;
@@ -240,8 +240,10 @@ html, body {
   display: block;
 }
 
-/* ---------- 3. Youmi's Works (full-bleed tiles + overlaid title) ---------- */
+/* ---------- 3. Youmi's Works (full-bleed morph slider + overlaid title) ---------- */
 .work { padding: 0; }
+/* Morphing slider fills the section; its arrows/dots sit inside it. */
+.work-slider { position: absolute; inset: 0; z-index: 0; }
 .work-grid {
   position: absolute;
   inset: 0;
@@ -263,6 +265,8 @@ html, body {
   z-index: 2;
   display: grid;
   place-items: center;
+  /* let clicks/drags fall through to the slider; only the CTA re-enables them */
+  pointer-events: none;
 }
 .work-headline {
   position: relative;
@@ -281,6 +285,7 @@ html, body {
   left: 50%;
   transform: translateX(-50%);
   margin-top: clamp(1.4rem, 3.5vw, 2.4rem);
+  pointer-events: auto;
 }
 
 /* Works button — "Decode" style: monospace label that scrambles on hover
@@ -336,7 +341,7 @@ html, body {
   gap: 1.6rem;
   padding: clamp(2rem, 6vw, 4rem) clamp(1.2rem, 4vw, 3rem);
 }
-.contact-title { font-size: clamp(1.8rem, 6vw, 5.5rem); }
+/* "Youmi's Contact" shares the same .screen-title size as "Youmi's Works". */
 .contact-sub {
   margin-top: -0.4rem;
   font-family: "jaf-mashine", var(--sans);

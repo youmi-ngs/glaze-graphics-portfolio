@@ -4,14 +4,21 @@ import DecodeButton from './DecodeButton.jsx';
 import Modal from './Modal.jsx';
 import Footer from './Footer.jsx';
 import SocialIcons from './SocialIcons.jsx';
-import { WORKS, placeholderClass } from './works.js';
+import MorphSlider from './MorphSlider.jsx';
+import { WORKS } from './works.js';
 
-// Featured works for the home teaser grid (up to 6). `featured` is a 1-based
-// rank that sets the tile order; falls back to the first works if none flagged.
+// Featured works for the home teaser (up to 6). `featured` is a 1-based rank
+// that sets the order; falls back to the first works if none flagged.
 const TEASER = (() => {
   const flagged = WORKS.filter((w) => w.featured).sort((a, b) => a.featured - b.featured);
   return (flagged.length ? flagged : WORKS).slice(0, 6);
 })();
+
+// Featured images fed to the morphing teaser slider (skip entries with no image).
+const TEASER_ITEMS = TEASER.filter((w) => w.img).map((w) => ({
+  image: w.img,
+  caption: w.title || undefined,
+}));
 
 // Down-chevron that scrolls to the next section. The Figma asset points up,
 // so we flip it (scaleY(-1)) via .scroll-arrow in CSS.
@@ -77,14 +84,20 @@ export default function Home() {
 
         {/* 3 — Youmi's Works: full-bleed teaser tiles (static) + title + CTA */}
         <section id="work" className="screen work">
-          <div className="work-grid" aria-hidden="true">
-            {TEASER.map((w, i) => (
-              <div
-                className={`tile ${w.img ? "" : placeholderClass(i)}`}
-                key={w.slug}
-                style={w.img ? { backgroundImage: `url(${w.img})` } : undefined}
-              />
-            ))}
+          <div className="work-slider">
+            <MorphSlider
+              className="work-morph"
+              items={TEASER_ITEMS}
+              autoplay
+              autoplayDelay={5}
+              transition="melt"
+              radius={0}
+              overlayColor="#8f9cf0"
+              drift={0}
+              blur={0.03}
+              glow={0.2}
+              showCaptions={false}
+            />
           </div>
           <div className="work-overlay">
             <div className="work-headline">
