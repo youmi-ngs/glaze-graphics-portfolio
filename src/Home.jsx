@@ -5,6 +5,7 @@ import Modal from './Modal.jsx';
 import Footer from './Footer.jsx';
 import SocialIcons from './SocialIcons.jsx';
 import MorphSlider from './MorphSlider.jsx';
+import GlitchText from './GlitchText.jsx';
 import { WORKS } from './works.js';
 
 // Featured works for the home teaser (up to 6). `featured` is a 1-based rank
@@ -101,7 +102,7 @@ export default function Home() {
           </div>
           <div className="work-overlay">
             <div className="work-headline">
-              <h2 className="screen-title">Youmi&rsquo;s&nbsp;Works</h2>
+              <h2 className="screen-title"><GlitchText text={"Youmi’s Works"} /></h2>
               <DecodeButton to="/works" label="See all works" />
             </div>
           </div>
@@ -112,7 +113,7 @@ export default function Home() {
         <section id="contact" className="screen contact">
           <div className="contact-inner">
             <h2 className="screen-title contact-title">
-              Youmi&rsquo;s&nbsp;Contact
+              <GlitchText text={"Youmi’s Contact"} />
             </h2>
             <p className="contact-sub">Want to get in touch?</p>
             <a className="mail" href="mailto:youmi@glaze-graphics.space">

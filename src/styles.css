@@ -107,7 +107,7 @@ html, body {
   font-weight: 400;
   font-size: clamp(2rem, 7vw, 6rem);
   line-height: 1.02;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.05em;
   color: #fff;
   text-shadow: 0 2px 40px rgba(0, 0, 0, 0.55);
 }
@@ -348,7 +348,7 @@ html, body {
   font-weight: 400;
   color: var(--fg);
   font-size: clamp(1.5rem, 4vw, 2.8rem);
-  letter-spacing: 0.02em;
+  letter-spacing: -0.05em;
 }
 .mail {
   font-family: var(--sans);
@@ -442,7 +442,7 @@ footer {
   font-family: "jaf-mashine", var(--sans);
   font-weight: 400;
   font-size: clamp(1.8rem, 5vw, 3rem);
-  letter-spacing: 0.02em;
+  letter-spacing: -0.05em;
   color: #fff;
   margin-bottom: 1.4rem;
 }
@@ -512,7 +512,7 @@ footer {
   font-weight: 400;
   font-size: clamp(2.6rem, 9vw, 6.5rem);
   line-height: 1;
-  letter-spacing: 0.02em;
+  letter-spacing: -0.05em;
   color: #fff;
   margin: 0.5rem 0 0.7rem;
 }
