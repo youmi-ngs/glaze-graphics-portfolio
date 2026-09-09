@@ -37,10 +37,13 @@ export default function GlitchText({
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.font = fontStr(fs);
       const chars = Array.from(text);
-      const sp = 0.9; // letter-spacing factor (<1 tightens)
+      // Tighten via native letterSpacing (a real px length → consistent across
+      // browsers), and position each glyph from the cumulative PREFIX width so we
+      // use the browser's own layout instead of summing per-char measures.
+      if ('letterSpacing' in ctx) ctx.letterSpacing = `${(-fs * 0.04).toFixed(2)}px`;
       const widths = chars.map((c) => ctx.measureText(c).width);
-      const advances = widths.map((w) => w * sp);
-      const total = advances.reduce((a, b) => a + b, 0);
+      const lefts = chars.map((_, i) => ctx.measureText(chars.slice(0, i).join('')).width);
+      const total = ctx.measureText(text).width;
       const padX = fs * 0.4;
       const padY = fs * 0.5;
       W = Math.ceil(total + padX * 2);
@@ -49,12 +52,12 @@ export default function GlitchText({
       canvas.height = Math.round(H * dpr);
       canvas.style.width = W + "px";
       canvas.style.height = H + "px";
+      if ('letterSpacing' in ctx) ctx.letterSpacing = '0px'; // draw glyphs without it
       // per-character centre positions (glitch reacts per letter)
       glyphs = [];
-      let x = (W - total) / 2;
+      const startX = (W - total) / 2;
       chars.forEach((c, i) => {
-        glyphs.push({ ch: c, cx: x + advances[i] / 2, ox: 0, oy: 0 });
-        x += advances[i];
+        glyphs.push({ ch: c, cx: startX + lefts[i] + widths[i] / 2, ox: 0, oy: 0 });
       });
     }
 
@@ -159,9 +162,13 @@ export default function GlitchText({
       layout();
       frame();
     };
-    // draw with the webfont once it's ready (else the first frames use fallback)
+    // Measure with the ACTUAL webfont — pass jaf-mashine WITHOUT a fallback list,
+    // otherwise fonts.load resolves instantly against sans-serif and we measure
+    // the wrong metrics (Chrome/Safari then disagree on spacing). Re-layout once
+    // all fonts are fully ready as a safety net.
     if (document.fonts?.load) {
-      document.fonts.load(fontStr(64), text).then(start).catch(start);
+      document.fonts.load('64px "jaf-mashine"', text).then(start).catch(start);
+      document.fonts.ready.then(() => layout());
     } else {
       start();
     }
