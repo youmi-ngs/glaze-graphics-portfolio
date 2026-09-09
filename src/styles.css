@@ -36,7 +36,9 @@ body {
 html, body {
   width: 100%;
   max-width: 100%;
-  overflow-x: hidden;
+  /* clip (not hidden) so it doesn't become its own scroll container, which would
+     stop scroll-snap-type on <html> from working */
+  overflow-x: clip;
 }
 
 /* ---------- Galaxy background ---------- */
@@ -85,8 +87,26 @@ html, body {
 }
 .nav nav a:hover { color: var(--fg); }
 
+/* ---------- Full-page deck (kamishibai) ---------- */
+/* The viewport shows one panel; the deck translates by one screen per step, so
+   the page never rests between sections. */
+.deck-viewport {
+  position: relative;
+  height: 100svh;
+  overflow: hidden;
+}
+.deck {
+  height: 100%;
+  transition: transform 0.8s cubic-bezier(0.7, 0, 0.2, 1);
+  will-change: transform;
+}
+.deck .screen { height: 100svh; }
+@media (prefers-reduced-motion: reduce) {
+  .deck { transition: none; }
+}
+
 /* ---------- Full-screen sections ---------- */
-/* Each section fills the viewport (minus nav) and snaps into place. */
+/* Each section fills the viewport (minus nav). */
 .screen {
   position: relative;
   min-height: 100svh;
@@ -116,12 +136,15 @@ html, body {
 .scroll-arrow {
   position: absolute;
   left: 50%;
-  bottom: clamp(1.4rem, 4vh, 3rem);
+  bottom: clamp(0.8rem, 2.5vh, 1.6rem);
   transform: translateX(-50%);
   z-index: 3;
   display: inline-flex;
   padding: 0.6rem;
   line-height: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
   opacity: 0.75;
   transition: opacity 0.2s;
   animation: arrow-bob 2s ease-in-out infinite;
@@ -244,6 +267,9 @@ html, body {
 .work { padding: 0; }
 /* Morphing slider fills the section; its arrows/dots sit inside it. */
 .work-slider { position: absolute; inset: 0; z-index: 0; }
+/* Lift the slider's indicator dots above the section's down-arrow so the order
+   reads: dots on top, then the chevron. */
+.work .morph-slider-indicators { bottom: clamp(5rem, 11vh, 7.5rem); }
 .work-grid {
   position: absolute;
   inset: 0;
