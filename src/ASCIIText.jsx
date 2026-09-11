@@ -8,12 +8,15 @@ varying vec2 vUv;
 uniform float uTime;
 uniform float mouse;
 uniform float uEnableWaves;
+uniform float uWaveScale;
 
 void main() {
     vUv = uv;
     float time = uTime * 5.;
 
-    float waveFactor = uEnableWaves;
+    // wave amplitude scales with plane size so the motion reads the same at
+    // every viewport (small mobile plane → gentler absolute displacement)
+    float waveFactor = uEnableWaves * uWaveScale;
 
     vec3 transformed = position;
 
@@ -190,10 +193,15 @@ class CanvasTxt {
 
   resize() {
     this.context.font = this.font;
-    const metrics = this.context.measureText(this.txt);
+    // support multi-line text via "\n" (e.g. a 2-line hero on mobile)
+    this.lines = this.txt.split('\n');
+    const widths = this.lines.map((l) => this.context.measureText(l).width);
+    const m = this.context.measureText(this.txt);
+    this.ascent = m.actualBoundingBoxAscent;
+    this.lineHeight = (m.actualBoundingBoxAscent + m.actualBoundingBoxDescent) * 1.25;
 
-    const textWidth = Math.ceil(metrics.width) + 20;
-    const textHeight = Math.ceil(metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent) + 20;
+    const textWidth = Math.ceil(Math.max(...widths)) + 20;
+    const textHeight = Math.ceil(this.lineHeight * this.lines.length) + 20;
 
     this.canvas.width = textWidth;
     this.canvas.height = textHeight;
@@ -203,11 +211,13 @@ class CanvasTxt {
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.context.fillStyle = this.color;
     this.context.font = this.font;
+    this.context.textAlign = 'center';
 
-    const metrics = this.context.measureText(this.txt);
-    const yPos = 10 + metrics.actualBoundingBoxAscent;
-
-    this.context.fillText(this.txt, 10, yPos);
+    const cx = this.canvas.width / 2;
+    this.lines.forEach((line, i) => {
+      const yPos = 10 + this.ascent + i * this.lineHeight;
+      this.context.fillText(line, cx, yPos);
+    });
   }
 
   get width() {
@@ -225,7 +235,7 @@ class CanvasTxt {
 
 class CanvAscii {
   constructor(
-    { text, asciiFontSize, textFontSize, textColor, planeBaseHeight, enableWaves },
+    { text, asciiFontSize, textFontSize, textColor, planeBaseHeight, planeWidthFrac, enableWaves },
     containerElem,
     width,
     height
@@ -235,6 +245,7 @@ class CanvAscii {
     this.textFontSize = textFontSize;
     this.textColor = textColor;
     this.planeBaseHeight = planeBaseHeight;
+    this.planeWidthFrac = planeWidthFrac ?? 0.6;
     this.container = containerElem;
     this.width = width;
     this.height = height;
@@ -284,9 +295,18 @@ class CanvAscii {
     this.texture.minFilter = THREE.NearestFilter;
 
     const textAspect = this.textCanvas.width / this.textCanvas.height;
-    const baseH = this.planeBaseHeight;
-    const planeW = baseH * textAspect;
-    const planeH = baseH;
+    this.textAspect = textAspect;
+    // Size by WIDTH: plane width = fraction of the camera's visible width at the
+    // plane depth; height follows the text aspect. Rebuilt on resize by
+    // fitPlane() so it tracks viewport width (never overflows).
+    const fovRad = (this.camera.fov * Math.PI) / 180;
+    const visH = 2 * this.camera.position.z * Math.tan(fovRad / 2);
+    const visW = visH * this.camera.aspect;
+    const planeW = visW * this.planeWidthFrac;
+    const planeH = planeW / textAspect;
+    // reference plane height that keeps desktop waves ~unchanged; smaller
+    // planes (mobile) get proportionally gentler motion
+    const waveScale = planeH / 6.5;
 
     this.geometry = new THREE.PlaneGeometry(planeW, planeH, 36, 36);
     this.material = new THREE.ShaderMaterial({
@@ -297,12 +317,31 @@ class CanvAscii {
         uTime: { value: 0 },
         mouse: { value: 1.0 },
         uTexture: { value: this.texture },
-        uEnableWaves: { value: this.enableWaves ? 1.0 : 0.0 }
+        uEnableWaves: { value: this.enableWaves ? 1.0 : 0.0 },
+        uWaveScale: { value: waveScale }
       }
     });
 
     this.mesh = new THREE.Mesh(this.geometry, this.material);
     this.scene.add(this.mesh);
+  }
+
+  // Rebuild the plane at real world size so its WIDTH = a fraction of the
+  // camera's visible width (tracks viewport width, no overflow). Rebuilding the
+  // geometry — not scaling the mesh — keeps the wave amplitude in real world
+  // units, so the motion looks identical at every size.
+  fitPlane() {
+    if (!this.mesh || !this.textAspect) return;
+    const fovRad = (this.camera.fov * Math.PI) / 180;
+    const visH = 2 * this.camera.position.z * Math.tan(fovRad / 2);
+    const visW = visH * this.camera.aspect;
+    const planeW = visW * this.planeWidthFrac;
+    const planeH = planeW / this.textAspect;
+    this.mesh.geometry.dispose();
+    this.mesh.geometry = new THREE.PlaneGeometry(planeW, planeH, 36, 36);
+    if (this.mesh.material.uniforms.uWaveScale) {
+      this.mesh.material.uniforms.uWaveScale.value = planeH / 6.5;
+    }
   }
 
   setRenderer() {
@@ -333,6 +372,7 @@ class CanvAscii {
     this.camera.updateProjectionMatrix();
 
     this.filter.setSize(w, h);
+    this.fitPlane();
 
     this.center = { x: w / 2, y: h / 2 };
   }
@@ -424,6 +464,7 @@ export default function ASCIIText({
   textFontSize = 200,
   textColor = '#fdf9f3',
   planeBaseHeight = 8,
+  planeWidthFrac = 0.6,
   enableWaves = true
 }) {
   const containerRef = useRef(null);
@@ -438,7 +479,7 @@ export default function ASCIIText({
 
     const createAndInit = async (container, w, h) => {
       const instance = new CanvAscii(
-        { text, asciiFontSize, textFontSize, textColor, planeBaseHeight, enableWaves },
+        { text, asciiFontSize, textFontSize, textColor, planeBaseHeight, planeWidthFrac, enableWaves },
         container,
         w,
         h
@@ -499,7 +540,7 @@ export default function ASCIIText({
         asciiRef.current = null;
       }
     };
-  }, [text, asciiFontSize, textFontSize, textColor, planeBaseHeight, enableWaves]);
+  }, [text, asciiFontSize, textFontSize, textColor, planeBaseHeight, planeWidthFrac, enableWaves]);
 
   return (
     <div

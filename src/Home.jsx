@@ -25,6 +25,15 @@ const TEASER_ITEMS = TEASER.filter((w) => w.img).map((w) => ({
 // Section ids in deck order (index = panel). Used to map nav hashes → panel.
 const SECTION_IDS = ['top', 'about', 'work', 'contact'];
 
+// Responsive hero params by viewport WIDTH (never height): phones (≤640) wrap
+// to two lines; tablets incl. iPad Pro portrait (≤1024) get a big single line;
+// wider desktops use a smaller fraction so the line isn't overwhelming.
+const heroCfgFor = (w) => {
+  if (w <= 640) return { text: 'Hello,\nworld!', asciiFontSize: 6, planeWidthFrac: 0.78 };
+  if (w <= 1024) return { text: 'Hello, world!', asciiFontSize: 8, planeWidthFrac: 0.9 };
+  return { text: 'Hello, world!', asciiFontSize: 10, planeWidthFrac: 0.72 };
+};
+
 // Down-chevron that advances to the next panel.
 function ScrollArrow({ onClick, label }) {
   return (
@@ -37,6 +46,22 @@ function ScrollArrow({ onClick, label }) {
 export default function Home() {
   const [aboutOpen, setAboutOpen] = useState(false);
   const [ringHover, setRingHover] = useState(false);
+
+  const [heroCfg, setHeroCfg] = useState(() =>
+    heroCfgFor(typeof window !== 'undefined' ? window.innerWidth : 1440)
+  );
+  useEffect(() => {
+    const apply = () => {
+      const next = heroCfgFor(window.innerWidth);
+      // only update when the breakpoint bucket changes (avoids re-initialising
+      // the WebGL hero on every resize tick)
+      setHeroCfg((prev) =>
+        prev.text === next.text && prev.asciiFontSize === next.asciiFontSize ? prev : next
+      );
+    };
+    window.addEventListener('resize', apply);
+    return () => window.removeEventListener('resize', apply);
+  }, []);
 
   // ── Full-page "kamishibai" deck: sections are stacked and the deck is
   // translated by one viewport per step, so the page never rests mid-section.
@@ -103,10 +128,10 @@ export default function Home() {
           {/* 1 — Hero: ASCIIText "Hello, world!" over the galaxy */}
           <section className="screen hero">
             <ASCIIText
-              text="Hello,&nbsp;world!"
+              text={heroCfg.text}
               enableWaves
-              asciiFontSize={10}
-              planeBaseHeight={4.4}
+              asciiFontSize={heroCfg.asciiFontSize}
+              planeWidthFrac={heroCfg.planeWidthFrac}
             />
             <ScrollArrow onClick={() => goTo(idxRef.current + 1)} label="Go to About" />
           </section>

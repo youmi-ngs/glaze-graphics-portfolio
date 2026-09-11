@@ -90,7 +90,7 @@ function useColumnCount(ref, minColWidth = 260, gap = 16) {
     const el = ref.current;
     if (!el) return;
     const calc = () =>
-      setCols(Math.max(1, Math.floor((el.clientWidth + gap) / (minColWidth + gap))));
+      setCols(Math.max(2, Math.floor((el.clientWidth + gap) / (minColWidth + gap))));
     calc();
     const ro = new ResizeObserver(calc);
     ro.observe(el);
