@@ -474,8 +474,7 @@ export default function ASCIIText({
     if (!containerRef.current) return;
 
     let cancelled = false;
-    let observer = null;
-    let ro = null;
+    let creating = false;
 
     const createAndInit = async (container, w, h) => {
       const instance = new CanvAscii(
@@ -488,53 +487,29 @@ export default function ASCIIText({
       return instance;
     };
 
-    const setup = async () => {
-      const { width, height } = containerRef.current.getBoundingClientRect();
-
-      if (width === 0 || height === 0) {
-        observer = new IntersectionObserver(
-          async ([entry]) => {
-            if (cancelled) return;
-            if (entry.isIntersecting && entry.boundingClientRect.width > 0 && entry.boundingClientRect.height > 0) {
-              const { width: w, height: h } = entry.boundingClientRect;
-              observer.disconnect();
-              observer = null;
-
-              if (!cancelled) {
-                asciiRef.current = await createAndInit(containerRef.current, w, h);
-                if (!cancelled && asciiRef.current) {
-                  asciiRef.current.load();
-                }
-              }
-            }
-          },
-          { threshold: 0.1 }
-        );
-        observer.observe(containerRef.current);
-        return;
-      }
-
-      asciiRef.current = await createAndInit(containerRef.current, width, height);
-      if (!cancelled && asciiRef.current) {
+    // Single source of truth: observe the container's real box. On a cold load
+    // it can be 0px when this effect runs (CSS/fonts not settled); the observer
+    // fires again once it has real dimensions, so we build then — and keep
+    // tracking size changes afterwards, so the hero never stays clipped.
+    const ro = new ResizeObserver(async (entries) => {
+      if (cancelled) return;
+      const rect = entries[0]?.contentRect;
+      if (!rect || rect.width === 0 || rect.height === 0) return;
+      if (asciiRef.current) {
+        asciiRef.current.setSize(rect.width, rect.height);
+      } else if (!creating) {
+        creating = true;
+        const instance = await createAndInit(containerRef.current, rect.width, rect.height);
+        if (cancelled) { instance.dispose(); return; }
+        asciiRef.current = instance;
         asciiRef.current.load();
-
-        ro = new ResizeObserver(entries => {
-          if (!entries[0] || !asciiRef.current) return;
-          const { width: w, height: h } = entries[0].contentRect;
-          if (w > 0 && h > 0) {
-            asciiRef.current.setSize(w, h);
-          }
-        });
-        ro.observe(containerRef.current);
       }
-    };
-
-    setup();
+    });
+    ro.observe(containerRef.current);
 
     return () => {
       cancelled = true;
-      if (observer) observer.disconnect();
-      if (ro) ro.disconnect();
+      ro.disconnect();
       if (asciiRef.current) {
         asciiRef.current.dispose();
         asciiRef.current = null;

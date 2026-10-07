@@ -234,6 +234,11 @@ export default function Galaxy({
       }
     }
     window.addEventListener('resize', resize, false);
+    // Track the container itself: on a cold load the box can be 0px when this
+    // effect runs (CSS/layout not settled yet) and no window-resize ever fires,
+    // which left the galaxy sized to 0 → blank until a manual reload.
+    const ro = new ResizeObserver(() => resize());
+    ro.observe(ctn);
 
     const geometry = new Triangle(gl);
     program = new Program(gl, {
@@ -307,6 +312,7 @@ export default function Galaxy({
 
     return () => {
       cancelAnimationFrame(animateId);
+      ro.disconnect();
       window.removeEventListener('resize', resize);
       if (mouseInteraction) {
         window.removeEventListener('mousemove', handleMouseMove);
