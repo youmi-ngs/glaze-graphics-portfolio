@@ -1,7 +1,8 @@
 import { useState, useMemo, useRef, useEffect } from 'react';
 import Modal from './Modal.jsx';
 import Footer from './Footer.jsx';
-import { WORKS, CATEGORIES, placeholderClass, categoryLabel } from './works.js';
+import { WORKS, WORKS_BY_DATE, CATEGORIES, placeholderClass, categoryLabel } from './works.js';
+import EXIF from './exif.json';
 
 // A single work card — masonry item, image shown at its natural aspect (no
 // crop). Opens the detail modal on click.
@@ -16,7 +17,9 @@ function WorkCard({ work, index, onOpen }) {
       {work.img ? (
         <img className="work-card__img" src={work.img} alt={work.title || ''} loading="lazy" />
       ) : (
-        <span className={`work-card__img work-card__ph ${placeholderClass(index)}`} />
+        <span className={`work-card__img work-card__ph ${work.logo ? 'has-logo' : placeholderClass(index)}`}>
+          {work.logo && <img src={work.logo} alt="" loading="lazy" />}
+        </span>
       )}
       {work.category === 'others' && (
         <span className="work-card__badge" aria-hidden="true">↗</span>
@@ -29,38 +32,49 @@ function WorkCard({ work, index, onOpen }) {
   );
 }
 
-// Modal contents — a main image plus a thumbnail strip when a work has several
-// variants (e.g. logo colour versions, kamon black/white).
+// Shooting data for a photo, keyed by filename (generated from the originals by
+// scripts/extract-exif.mjs). Gear first, then exposure — the usual order.
+function photoMeta(work) {
+  if (work.category !== 'photography' || !work.img) return null;
+  const m = EXIF[work.img.split('/').pop()];
+  if (!m) return null;
+  const gear = [m.camera, m.lens].filter(Boolean);
+  const exposure = [m.focal, m.fnumber, m.shutter, m.iso].filter(Boolean);
+  return gear.length || exposure.length ? { gear, exposure } : null;
+}
+
+// Modal contents — the image fills the view; title, text and shooting data sit
+// below it (scroll to reveal). A thumbnail strip appears when a work has
+// several variants (e.g. logo colour versions, kamon black/white).
 function WorkDetail({ work }) {
   const imgs = work.images?.length ? work.images : [work.img].filter(Boolean);
   const [idx, setIdx] = useState(0);
+  const meta = photoMeta(work);
+
+  // Photos: show the 1600px copy at once (already cached from the gallery),
+  // then swap in the 2560px one from photos/large/ when it has loaded — the
+  // modal shows the photo at full viewport height, more than 1600px on Retina.
+  const [hiRes, setHiRes] = useState(null);
+  useEffect(() => {
+    if (work.category !== 'photography' || !work.img) return;
+    const src = work.img.replace('/photos/', '/photos/large/');
+    const pre = new Image();
+    pre.onload = () => setHiRes(src);
+    pre.src = src; // a missing large copy just keeps the 1600px one
+    return () => { pre.onload = null; };
+  }, [work]);
+  const shown = idx === 0 && hiRes ? hiRes : imgs[idx];
 
   return (
-    <div className="work-modal__inner">
-      <div className="work-modal__text">
-        <p className="work-modal__cat">
-          {categoryLabel(work.category)}{work.year ? ` · ${work.year}` : ''}
-        </p>
-        <h2>{work.title || 'Untitled'}</h2>
-        {work.description && <p className="work-modal__desc">{work.description}</p>}
-        {work.link && (
-          <a
-            className="work-modal__link"
-            href={work.link}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Visit&nbsp;live <span aria-hidden="true">↗</span>
-          </a>
-        )}
-      </div>
-
+    <div className="work-modal__inner modal-scroll">
       <div className="work-modal__media">
         <div className="work-modal__stage">
           {imgs[idx] ? (
-            <img src={imgs[idx]} alt={work.title || ''} />
+            <img src={shown} alt={work.title || ''} />
           ) : (
-            <span className={`work-modal__ph ${placeholderClass(WORKS.indexOf(work))}`} />
+            <span className={`work-modal__ph ${work.logo ? 'has-logo' : placeholderClass(WORKS.indexOf(work))}`}>
+              {work.logo && <img src={work.logo} alt="" />}
+            </span>
           )}
         </div>
         {imgs.length > 1 && (
@@ -77,6 +91,34 @@ function WorkDetail({ work }) {
               </button>
             ))}
           </div>
+        )}
+      </div>
+
+      <div className="work-modal__text">
+        <p className="work-modal__cat">
+          {categoryLabel(work.category)}{work.year ? ` · ${work.year}` : ''}
+        </p>
+        <h2>{work.title || 'Untitled'}</h2>
+        {work.description && <p className="work-modal__desc">{work.description}</p>}
+        {meta && (
+          <dl className="work-modal__exif" aria-label="Shooting data">
+            {meta.gear.length > 0 && (
+              <div><dt>Gear</dt><dd>{meta.gear.join(' · ')}</dd></div>
+            )}
+            {meta.exposure.length > 0 && (
+              <div><dt>Exposure</dt><dd>{meta.exposure.map((v) => <span key={v}>{v}</span>)}</dd></div>
+            )}
+          </dl>
+        )}
+        {work.link && (
+          <a
+            className="work-modal__link"
+            href={work.link}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Visit&nbsp;live <span aria-hidden="true">↗</span>
+          </a>
         )}
       </div>
     </div>
@@ -106,7 +148,7 @@ export default function WorksPage() {
   const colCount = useColumnCount(gridRef);
 
   const filtered = useMemo(
-    () => (filter === 'all' ? WORKS : WORKS.filter((w) => w.category === filter)),
+    () => (filter === 'all' ? WORKS_BY_DATE : WORKS_BY_DATE.filter((w) => w.category === filter)),
     [filter]
   );
 

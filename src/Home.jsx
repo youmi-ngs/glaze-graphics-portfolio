@@ -8,6 +8,9 @@ import SocialIcons from './SocialIcons.jsx';
 import MorphSlider from './MorphSlider.jsx';
 import GlitchText from './GlitchText.jsx';
 import { WORKS } from './works.js';
+import { SOCIALS } from './social.js';
+
+const INSTAGRAM = SOCIALS.find((s) => s.name === 'Instagram');
 
 // Featured works for the home teaser (up to 6). `featured` is a 1-based rank
 // that sets the order; falls back to the first works if none flagged.
@@ -68,7 +71,7 @@ export default function Home() {
   const [section, setSection] = useState(0);
   const idxRef = useRef(0);
   const lockedRef = useRef(false);
-  const { hash } = useLocation();
+  const { hash, key } = useLocation();
 
   const goTo = useCallback((n) => {
     const t = Math.max(0, Math.min(SECTION_IDS.length - 1, n));
@@ -79,11 +82,13 @@ export default function Home() {
     window.setTimeout(() => { lockedRef.current = false; }, 650);
   }, []);
 
-  // nav hashes (About / Contact / brand) and cross-route landings → jump to panel
+  // nav hashes (About / Contact / brand) and cross-route landings → jump to
+  // panel. `key` changes on every navigation, so clicking the same nav link
+  // again (hash unchanged, but the deck was wheeled elsewhere) still jumps.
   useEffect(() => {
     const i = SECTION_IDS.indexOf((hash || '#top').slice(1));
     if (i >= 0) { idxRef.current = i; setSection(i); }
-  }, [hash]);
+  }, [hash, key]);
 
   // one wheel / key / swipe gesture = exactly one panel (momentum ignored)
   useEffect(() => {
@@ -123,7 +128,9 @@ export default function Home() {
 
   return (
     <>
-      <main id="top" className="deck-viewport">
+      {/* overflow:hidden still scrolls programmatically (focus, anchors) —
+          pin it at 0 so only the deck transform decides what's on screen */}
+      <main id="top" className="deck-viewport" onScroll={(e) => { e.currentTarget.scrollTop = 0; }}>
         <div className="deck" style={{ transform: `translateY(${-section * 100}svh)` }}>
           {/* 1 — Hero: ASCIIText "Hello, world!" over the galaxy */}
           <section className="screen hero">
@@ -202,8 +209,8 @@ export default function Home() {
                 <GlitchText text={"Youmi’s Contact"} />
               </h2>
               <p className="contact-sub">Want to get in touch?</p>
-              <a className="mail" href="mailto:youmi@glaze-graphics.space">
-                youmi@glaze-graphics.space
+              <a className="mail" href={INSTAGRAM.href} target="_blank" rel="noopener noreferrer">
+                @{INSTAGRAM.href.replace(/\/+$/, '').split('/').pop()}
               </a>
             </div>
             <Footer />
@@ -213,7 +220,7 @@ export default function Home() {
 
       {/* About modal — opened from the "Who is Youmi?" ring */}
       {aboutOpen && (
-        <Modal onClose={() => setAboutOpen(false)} label="About Youmi">
+        <Modal onClose={() => setAboutOpen(false)} label="About Youmi" className="about-modal">
           <div className="modal-body">
             <h2>Who is Youmi?</h2>
 
@@ -224,9 +231,7 @@ export default function Home() {
 
             <p>
               I don&rsquo;t have a career yet, but I&rsquo;m working on it. My
-              goal is to become a designer, working across graphics and the web.<br />
-              Right now, I mentor teens in web design and direction at Life is
-              Tech!
+              goal is to become a designer, working across graphics and the web.
             </p>
 
             <p>

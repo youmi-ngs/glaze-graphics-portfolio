@@ -420,23 +420,32 @@ footer {
   .work-grid { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(3, 1fr); }
 }
 
-/* ---------- About modal ---------- */
+/* ---------- Modals (shared rules) ----------
+   Every modal (About, work detail) uses the same frame:
+   --modal-gap  space between the viewport edge and the panel
+   --mpad       inset between the panel edge and its content (photo, text)
+   --mw / --mh  largest panel the viewport allows
+   plus the same square panel and the same ✕ (disc, top-left). */
 .modal-backdrop {
+  --modal-gap: clamp(0.5rem, 1.6vw, 1rem);
+  --mpad: 1rem;
+  --mw: calc(100vw - 2 * var(--modal-gap));
+  --mh: calc(100dvh - 2 * var(--modal-gap));
   position: fixed;
   inset: 0;
   z-index: 100;
   display: grid;
   place-items: center;
-  padding: clamp(1rem, 4vw, 2.5rem);
+  padding: var(--modal-gap);
   background: rgba(4, 5, 12, 0.62);
   backdrop-filter: blur(6px);
   animation: modal-fade 0.2s ease;
 }
 .modal-panel {
   position: relative;
-  width: min(92vw, 1000px);
-  height: min(84vh, 680px);
-  border-radius: 30px;
+  max-width: var(--mw);
+  max-height: var(--mh);
+  border-radius: 0;
   border: 1px solid var(--line);
   background: rgba(18, 20, 42, 0.82);
   backdrop-filter: blur(14px);
@@ -444,25 +453,57 @@ footer {
   overflow: auto;
   animation: modal-pop 0.24s cubic-bezier(0.2, 0.9, 0.3, 1);
 }
+/* ✕ — a disc so it reads on bright photos too */
 .modal-close {
   position: absolute;
-  top: clamp(1rem, 3vw, 2.2rem);
-  left: clamp(1rem, 3vw, 2.2rem);
+  z-index: 2;
+  top: calc(var(--mpad) + 0.6rem);
+  left: calc(var(--mpad) + 0.6rem);
   display: inline-flex;
-  padding: 0.5rem;
-  background: none;
+  padding: 0.35rem;
   border: 0;
+  border-radius: 999px;
+  background: rgba(8, 10, 22, 0.55);
+  backdrop-filter: blur(6px);
   cursor: pointer;
   line-height: 0;
   opacity: 0.85;
   transition: opacity 0.2s, transform 0.2s;
 }
 .modal-close:hover { opacity: 1; transform: rotate(90deg); }
-.modal-close img { display: block; transform: rotate(45deg); } /* asset is a "+" → rotate to × */
+.modal-close img { display: block; width: 22px; height: 22px; transform: rotate(45deg); } /* asset is a "+" → rotate to × */
+
+/* Scrolling modal content: a slim floating pill in the site's iris gradient,
+   no visible track, inset from the panel's top/bottom edges. Always visible. */
+.modal-scroll { overflow-y: auto; overscroll-behavior: contain; }
+.modal-scroll::-webkit-scrollbar { width: 12px; }
+.modal-scroll::-webkit-scrollbar-track { background: transparent; margin: 0.8rem 0; }
+.modal-scroll::-webkit-scrollbar-thumb {
+  /* the transparent border + padding-box clip turns the 12px bar into a 4px pill */
+  border: 4px solid transparent;
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(110, 198, 255, 0.3) 0%, rgba(167, 139, 250, 0.3) 50%, rgba(240, 166, 216, 0.3) 100%) padding-box;
+}
+.modal-scroll::-webkit-scrollbar-thumb:hover {
+  border-width: 3px;
+  background: linear-gradient(180deg, rgba(110, 198, 255, 0.8) 0%, rgba(167, 139, 250, 0.8) 50%, rgba(240, 166, 216, 0.8) 100%) padding-box;
+}
+@supports not selector(::-webkit-scrollbar) {
+  .modal-scroll { scrollbar-width: thin; scrollbar-color: rgba(167, 139, 250, 0.45) transparent; }
+}
+
+/* ---------- About modal ---------- */
+/* text block sits in the dead centre of the panel (margin:auto in a flex box
+   centres it, and still lets tall content scroll from the top) */
+.modal-panel.about-modal {
+  width: min(var(--mw), 1000px);
+  height: min(var(--mh), 680px);
+  display: flex;
+}
 .modal-body {
   max-width: 62ch;
-  margin: 0 auto;
-  padding: clamp(4rem, 10vw, 6rem) clamp(1.6rem, 5vw, 4rem) clamp(2.5rem, 6vw, 4rem);
+  margin: auto;
+  padding: clamp(3.6rem, 8vw, 4.5rem) clamp(1.6rem, 5vw, 4rem);
 }
 .modal-body h2 {
   font-family: "jaf-mashine", var(--sans);
@@ -618,6 +659,16 @@ footer {
   transition: filter 0.35s, transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 .work-card__ph { aspect-ratio: 4 / 5; } /* gradient placeholder keeps a shape */
+/* sites/apps with a `logo`: the logo sits small in the middle of a dark tile,
+   so the card reads as "a product", not as a logo work */
+.work-card__ph.has-logo,
+.work-modal__ph.has-logo {
+  display: grid;
+  place-items: center;
+  background: radial-gradient(120% 90% at 50% 40%, #232650 0%, #12142a 70%);
+}
+.work-card__ph.has-logo img,
+.work-modal__ph.has-logo img { width: 58%; height: auto; display: block; }
 .work-card:hover .work-card__img,
 .work-card:focus-visible .work-card__img { filter: brightness(1.06); }
 .work-card:focus-visible { outline: 2px solid #6ec6ff; outline-offset: 3px; }
@@ -677,55 +728,48 @@ footer {
 }
 
 /* ---- detail modal ---- */
-/* Text on the left, image on the right. The image column hugs the picture (the
-   <img> is sized to the image itself — no letterbox), and gets an equal --mpad
-   inset on every side, so a tall image and a wide image both sit with the same
-   margin all around. The media box shrink-wraps the image and centres in the
-   panel. */
+/* The photo fills the modal on open (sized to the image itself — no letterbox,
+   equal --mpad inset all round). Title, text and shooting data sit BELOW it,
+   so they only come into view when you scroll. The panel shrink-wraps the
+   image's width; the inner box is the scroller, so the close button (absolute
+   on the panel) stays put while the content scrolls. */
 .modal-panel.work-modal {
+  --sb: 12px; /* scrollbar width (see .modal-scroll) */
   padding: 0;
-  --mpad: clamp(1.4rem, 2.6vw, 2.2rem);
-  /* shrink-wrap to the content in BOTH axes: width to the text/image, height to
-     whichever of the two is taller (capped to the viewport). No dead space. */
   width: auto;
-  max-width: min(94vw, 1080px);
   height: auto;
-  max-height: min(84vh, 680px);
-  overflow: hidden; /* desktop: fit content, no scroll (mobile re-enables it) */
+  overflow: hidden;
 }
 .work-modal__inner {
-  display: grid;
-  /* text column hugs its content (capped at ~30ch so paragraphs still wrap);
-     the filled text meets the --mpad left inset exactly */
-  grid-template-columns: fit-content(30ch) auto;
-  align-items: center;
-  height: 100%;
+  display: flex;
+  flex-direction: column;
+  max-height: calc(var(--mh) - 2px); /* panel border */
+  overflow-x: hidden;
 }
 .work-modal__media {
-  align-self: stretch; /* background spans the full modal height */
+  flex: 0 0 auto;
   display: flex;
   flex-direction: column;   /* image on top, variant thumbs below it */
   align-items: center;
-  justify-content: center;  /* the image+thumbs group stays vertically centred */
   gap: clamp(0.7rem, 1.4vw, 1.1rem);
   padding: var(--mpad);
-  position: relative;
-  background: rgba(0, 0, 0, 0.28);
 }
-.work-modal__stage { display: flex; }
+.work-modal__stage { display: flex; justify-content: center; max-width: 100%; }
 .work-modal__stage img {
   display: block;
   width: auto;
   height: auto;
-  /* height cap keeps tall portraits inside the panel; the smaller width cap
-     stops square/wide images from ballooning — they end up roughly the same
-     width as the portrait photos (their margins won't be equal, that's fine). */
-  max-height: calc(min(84vh, 680px) - 2 * var(--mpad));
-  max-width: min(42vw, 440px);
+  /* exactly one screen of photo: the text below starts just off-screen */
+  max-height: calc(var(--mh) - 2px - 2 * var(--mpad));
+  max-width: calc(var(--mw) - 2px - 2 * var(--mpad));
   object-fit: contain; /* whole image, never cropped */
-  border-radius: 6px;
+  border-radius: 0;
 }
-.work-modal__ph { width: min(40vw, 340px); aspect-ratio: 4 / 5; border-radius: 6px; }
+/* leave room for the variant thumbs row under the image */
+.work-modal__media:has(.work-modal__thumbs) .work-modal__stage img {
+  max-height: calc(var(--mh) - 2px - 2 * var(--mpad) - 52px - clamp(0.7rem, 1.4vw, 1.1rem));
+}
+.work-modal__ph { width: min(60vw, 420px); aspect-ratio: 4 / 5; border-radius: 0; }
 /* Variant thumbs sit below the image (in flow), never overlapping it. */
 .work-modal__thumbs {
   display: flex;
@@ -740,7 +784,7 @@ footer {
   padding: 0;
   width: 52px;
   height: 52px;
-  border-radius: 8px;
+  border-radius: 0;
   overflow: hidden;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid var(--line);
@@ -752,13 +796,13 @@ footer {
 .work-thumb.is-active { opacity: 1; border-color: #a78bfa; }
 .work-thumb:focus-visible { outline: 2px solid #6ec6ff; outline-offset: 2px; }
 .work-modal__text {
-  /* right-aligned text; the LEFT inset equals --mpad so the gap from the
-     longest line to the modal's left edge matches the image's side margin. */
-  padding: clamp(2.4rem, 5vw, 3.6rem) clamp(1.6rem, 3.2vw, 2.6rem) clamp(2.4rem, 5vw, 3.6rem) var(--mpad);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  text-align: right;
+  /* width:0 + min-width:100% → the text never widens the panel; it wraps to
+     the photo's width instead */
+  width: 0;
+  min-width: 100%;
+  box-sizing: border-box;
+  padding: clamp(1.2rem, 3vw, 2rem) var(--mpad) clamp(1.8rem, 4vw, 2.8rem);
+  border-top: 1px solid var(--line);
 }
 .work-modal__cat {
   font-family: var(--sans);
@@ -766,7 +810,7 @@ footer {
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--muted);
-  margin-bottom: 0.8rem;
+  margin-bottom: 0.6rem;
 }
 .work-modal__text h2 {
   font-family: "hoverunit", var(--sans);
@@ -775,15 +819,32 @@ footer {
   letter-spacing: -0.02em;
   color: #fff;
   line-height: 1.05;
-  white-space: nowrap; /* title always on one line */
 }
 .work-modal__desc {
   margin-top: 1.1rem;
   color: var(--fg);
   font-size: 1.02rem;
 }
+/* Shooting data: gear line, then exposure values */
+.work-modal__exif {
+  margin: 1.4rem 0 0;
+  display: grid;
+  gap: 0.45rem;
+  font-family: var(--sans);
+  font-size: 0.88rem;
+  color: var(--fg);
+}
+.work-modal__exif > div { display: flex; gap: 1rem; align-items: baseline; }
+.work-modal__exif dt {
+  flex: 0 0 5.5rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.work-modal__exif dd { margin: 0; display: flex; flex-wrap: wrap; column-gap: 1.1rem; row-gap: 0.2rem; }
+.work-modal__exif dd span { font-variant-numeric: tabular-nums; }
 .work-modal__link {
-  align-self: flex-end;
   margin-top: 1.8rem;
   display: inline-flex;
   align-items: center;
@@ -799,10 +860,22 @@ footer {
 }
 .work-modal__link:hover { transform: translateY(-1px); opacity: 0.92; }
 
+/* The styled scrollbar takes --sb on the right. To keep exactly --mpad on all
+   four sides of the photo, the scrollbar lives INSIDE the right-hand --mpad:
+   horizontal padding is cut by --sb on both sides, and the left gets --sb back
+   on the scroller. (Firefox has no ::-webkit-scrollbar and uses an overlay bar,
+   so the plain --mpad applies there.) */
+@supports selector(::-webkit-scrollbar) {
+  .work-modal__inner { padding-left: var(--sb); }
+  .work-modal__media,
+  .work-modal__text {
+    padding-left: calc(var(--mpad) - var(--sb));
+    padding-right: calc(var(--mpad) - var(--sb));
+  }
+}
+
+
 @media (max-width: 720px) {
-  /* stack: image on top, text below — scrolling is fine here */
-  .modal-panel.work-modal { overflow-y: auto; }
-  .work-modal__inner { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
-  .work-modal__media { order: -1; }
-  .work-modal__stage img { max-height: 42vh; max-width: min(88vw, 520px); }
+  .work-modal__exif > div { flex-direction: column; gap: 0.15rem; }
+  .work-modal__exif dt { flex-basis: auto; }
 }

@@ -1,0 +1,498 @@
+{
+  "20230624_hydrangea.JPG": {
+    "camera": "Canon EOS R50",
+    "lens": "RF-S18-45mm F4.5-6.3 IS STM",
+    "focal": "18mm",
+    "fnumber": "f/4.5",
+    "shutter": "1/60s",
+    "iso": "ISO 100"
+  },
+  "20230805_jellyfish.JPG": {
+    "camera": "Canon EOS R50",
+    "lens": "RF-S18-45mm F4.5-6.3 IS STM",
+    "focal": "32mm",
+    "fnumber": "f/5.6",
+    "shutter": "1/8s",
+    "iso": "ISO 200"
+  },
+  "20230805_kyotoaquarium.JPG": {
+    "camera": "Canon EOS R50",
+    "lens": "RF-S18-45mm F4.5-6.3 IS STM",
+    "focal": "18mm",
+    "fnumber": "f/5.6",
+    "shutter": "1/100s",
+    "iso": "ISO 800"
+  },
+  "20230805_penguin.jpg": {
+    "camera": "Canon EOS R50",
+    "lens": "RF-S18-45mm F4.5-6.3 IS STM",
+    "focal": "45mm",
+    "fnumber": "f/6.3",
+    "shutter": "1/125s",
+    "iso": "ISO 100"
+  },
+  "20240101_small-bird.jpg": {
+    "camera": "Canon EOS R50",
+    "lens": "RF-S55-210mm F5-7.1 IS STM",
+    "focal": "210mm",
+    "fnumber": "f/7.1",
+    "shutter": "1/200s",
+    "iso": "ISO 100"
+  },
+  "20240213_hiro.jpg": {
+    "camera": "Canon EOS R50",
+    "lens": "RF-S55-210mm F5-7.1 IS STM",
+    "focal": "210mm",
+    "fnumber": "f/7.1",
+    "shutter": "1/400s",
+    "iso": "ISO 320"
+  },
+  "202402_balloons.jpg": {
+    "camera": "Canon EOS R50",
+    "lens": "RF-S18-45mm F4.5-6.3 IS STM",
+    "focal": "45mm",
+    "fnumber": "f/6.3",
+    "shutter": "1/60s",
+    "iso": "ISO 100"
+  },
+  "20240320_tiki.jpg": {
+    "camera": "Canon EOS R50",
+    "lens": "RF-S18-45mm F4.5-6.3 IS STM",
+    "focal": "18mm",
+    "fnumber": "f/4.5",
+    "shutter": "1/125s",
+    "iso": "ISO 100"
+  },
+  "20240607_spacemountain.JPG": {
+    "camera": "Canon EOS R50",
+    "lens": "RF-S18-45mm F4.5-6.3 IS STM",
+    "focal": "18mm",
+    "fnumber": "f/4.5",
+    "shutter": "1/4000s",
+    "iso": "ISO 3200"
+  },
+  "20240607_startours.JPG": {
+    "camera": "Canon EOS R50",
+    "lens": "RF-S55-210mm F5-7.1 IS STM",
+    "focal": "64mm",
+    "fnumber": "f/5.6",
+    "shutter": "1/30s",
+    "iso": "ISO 6400"
+  },
+  "20240626_goldenGateBridge.JPG": {
+    "camera": "Canon EOS R50",
+    "lens": "RF-S18-45mm F4.5-6.3 IS STM",
+    "focal": "18mm",
+    "fnumber": "f/4.5",
+    "shutter": "1/800s",
+    "iso": "ISO 100"
+  },
+  "20240627_applePark.JPG": {
+    "camera": "Canon EOS R50",
+    "lens": "RF-S18-45mm F4.5-6.3 IS STM",
+    "focal": "37mm",
+    "fnumber": "f/5.6",
+    "shutter": "1/320s",
+    "iso": "ISO 100"
+  },
+  "20241221_telecomcenter.JPG": {
+    "camera": "Canon EOS R50",
+    "lens": "RF-S55-210mm F5-7.1 IS STM",
+    "focal": "55mm",
+    "fnumber": "f/6.3",
+    "shutter": "1/15s",
+    "iso": "ISO 100"
+  },
+  "20250114_ticket.JPG": {
+    "camera": "Canon EOS R50",
+    "lens": "RF50mm F1.8 STM",
+    "focal": "50mm",
+    "fnumber": "f/1.8",
+    "shutter": "1/400s",
+    "iso": "ISO 2000"
+  },
+  "20250122_street.JPG": {
+    "camera": "Canon EOS R50",
+    "lens": "RF50mm F1.8 STM",
+    "focal": "50mm",
+    "fnumber": "f/1.8",
+    "shutter": "1/640s",
+    "iso": "ISO 100"
+  },
+  "20250203_frozen.jpg": {
+    "camera": "Canon EOS R50",
+    "lens": "RF50mm F1.8 STM",
+    "focal": "50mm",
+    "fnumber": "f/1.8",
+    "shutter": "1/100s",
+    "iso": "ISO 800"
+  },
+  "20250203_minnieTrail.jpg": {
+    "camera": "Canon EOS R50",
+    "lens": "RF50mm F1.8 STM",
+    "focal": "50mm",
+    "fnumber": "f/1.8",
+    "shutter": "1/125s",
+    "iso": "ISO 320"
+  },
+  "20250203_pocahontas.jpg": {
+    "camera": "Canon EOS R50",
+    "lens": "RF50mm F1.8 STM",
+    "focal": "50mm",
+    "fnumber": "f/2.2",
+    "shutter": "1/250s",
+    "iso": "ISO 100"
+  },
+  "20250203_rapunzel.jpg": {
+    "camera": "Canon EOS R50",
+    "lens": "RF-S55-210mm F5-7.1 IS STM",
+    "focal": "210mm",
+    "fnumber": "f/7.1",
+    "shutter": "1/250s",
+    "iso": "ISO 400"
+  },
+  "20250214_yummy.jpg": {
+    "camera": "Canon EOS R50",
+    "lens": "RF50mm F1.8 STM",
+    "focal": "50mm",
+    "fnumber": "f/1.8",
+    "shutter": "1/4000s",
+    "iso": "ISO 100"
+  },
+  "20250318_sakura-with-you.jpg": {
+    "camera": "Canon EOS R50",
+    "lens": "RF50mm F1.8 STM",
+    "focal": "50mm",
+    "fnumber": "f/1.8",
+    "shutter": "1/2000s",
+    "iso": "ISO 100"
+  },
+  "20250331_sakura.JPG": {
+    "camera": "Canon EOS R50",
+    "lens": "RF50mm F1.8 STM",
+    "focal": "50mm",
+    "fnumber": "f/1.8",
+    "shutter": "1/100s",
+    "iso": "ISO 400"
+  },
+  "20250407_sakura.jpg": {
+    "camera": "Canon EOS R50",
+    "lens": "RF50mm F1.8 STM",
+    "focal": "50mm",
+    "fnumber": "f/3.5",
+    "shutter": "1/500s",
+    "iso": "ISO 100"
+  },
+  "20250505_Hello-moon.jpg": {
+    "camera": "Canon EOS R50",
+    "lens": "RF50mm F1.8 STM",
+    "focal": "50mm",
+    "fnumber": "f/1.8",
+    "shutter": "1/640s",
+    "iso": "ISO 100"
+  },
+  "20250506_failure.jpg": {
+    "camera": "Canon EOS R50",
+    "lens": "RF-S55-210mm F5-7.1 IS STM",
+    "focal": "210mm",
+    "fnumber": "f/7.1",
+    "shutter": "1/10s",
+    "iso": "ISO 1600"
+  },
+  "20250517_yasaka-2.JPG": {
+    "camera": "Canon EOS R50",
+    "lens": "EF 50mm f/1.8",
+    "focal": "50mm",
+    "fnumber": "f/1.8",
+    "shutter": "1/160s",
+    "iso": "ISO 1000"
+  },
+  "20250517_yasaka.JPG": {
+    "camera": "Canon EOS R50",
+    "lens": "EF 50mm f/1.8",
+    "focal": "50mm",
+    "fnumber": "f/1.8",
+    "shutter": "1/200s",
+    "iso": "ISO 320"
+  },
+  "20250721_sky.jpg": {
+    "camera": "Canon EOS R50",
+    "lens": "RF50mm F1.8 STM",
+    "focal": "50mm",
+    "fnumber": "f/1.8",
+    "shutter": "1/4000s",
+    "iso": "ISO 100"
+  },
+  "202507_naked-space-mountain.jpg": {
+    "camera": "Canon EOS R50",
+    "lens": "RF50mm F1.8 STM",
+    "focal": "50mm",
+    "fnumber": "f/1.8",
+    "shutter": "1/4000s",
+    "iso": "ISO 100"
+  },
+  "202507_nil-2.jpg": {
+    "camera": "Canon EOS R50",
+    "lens": "RF50mm F1.8 STM",
+    "focal": "50mm",
+    "fnumber": "f/1.8",
+    "shutter": "1/500s",
+    "iso": "ISO 100"
+  },
+  "202507_nil.jpg": {
+    "camera": "Canon EOS R50",
+    "lens": "RF50mm F1.8 STM",
+    "focal": "50mm",
+    "fnumber": "f/1.8",
+    "shutter": "1/1000s",
+    "iso": "ISO 100"
+  },
+  "20250810_tokyo-tower.jpg": {
+    "camera": "Canon EOS R50",
+    "lens": "EF 50mm f/1.8",
+    "focal": "50mm",
+    "fnumber": "f/1.8",
+    "shutter": "1/500s",
+    "iso": "ISO 6400"
+  },
+  "20251120_space-mt.JPG": {
+    "camera": "Canon EOS R50",
+    "lens": "RF50mm F1.8 STM",
+    "focal": "50mm",
+    "fnumber": "f/1.8",
+    "shutter": "1/80s",
+    "iso": "ISO 1000"
+  },
+  "20251120_xmas-tree.JPG": {
+    "camera": "Canon EOS R50",
+    "lens": "RF50mm F1.8 STM",
+    "focal": "50mm",
+    "fnumber": "f/1.8",
+    "shutter": "1/250s",
+    "iso": "ISO 320"
+  },
+  "20251224_merry-christmas.jpg": {
+    "camera": "Canon EOS R50",
+    "lens": "RF50mm F1.8 STM",
+    "focal": "50mm",
+    "fnumber": "f/1.8",
+    "shutter": "1/200s",
+    "iso": "ISO 400"
+  },
+  "20260216_ashimoto-no-hito.JPG": {
+    "camera": "Canon EOS R50",
+    "lens": "RF50mm F1.8 STM",
+    "focal": "50mm",
+    "fnumber": "f/1.8",
+    "shutter": "1/320s",
+    "iso": "ISO 250"
+  },
+  "20260216_kyoto-shi.JPG": {
+    "camera": "Canon EOS R50",
+    "lens": "RF50mm F1.8 STM",
+    "focal": "50mm",
+    "fnumber": "f/1.8",
+    "shutter": "1/200s",
+    "iso": "ISO 640"
+  },
+  "20260216_ropeShopInOike.JPG": {
+    "camera": "Canon EOS R50",
+    "lens": "RF50mm F1.8 STM",
+    "focal": "50mm",
+    "fnumber": "f/1.8",
+    "shutter": "1/640s",
+    "iso": "ISO 100"
+  },
+  "20260305_tomorrowland.JPG": {
+    "camera": "Canon EOS R50",
+    "lens": "RF50mm F1.8 STM",
+    "focal": "50mm",
+    "fnumber": "f/1.8",
+    "shutter": "1/250s",
+    "iso": "ISO 800"
+  },
+  "20260411_a-sad-look.jpg": {
+    "camera": "Canon EOS R50",
+    "lens": "RF50mm F1.8 STM",
+    "focal": "50mm",
+    "fnumber": "f/1.8",
+    "shutter": "1/400s",
+    "iso": "ISO 160"
+  },
+  "20260411_big-bird.jpg": {
+    "camera": "Canon EOS R50",
+    "lens": "RF50mm F1.8 STM",
+    "focal": "50mm",
+    "fnumber": "f/1.8",
+    "shutter": "1/4000s",
+    "iso": "ISO 100"
+  },
+  "20260411_love-is-love.jpg": {
+    "camera": "Canon EOS R50",
+    "lens": "RF50mm F1.8 STM",
+    "focal": "50mm",
+    "fnumber": "f/1.8",
+    "shutter": "1/1250s",
+    "iso": "ISO 100"
+  },
+  "202605_suzume.jpg": {
+    "camera": "Canon EOS R50",
+    "lens": "RF50mm F1.8 STM",
+    "focal": "50mm",
+    "fnumber": "f/1.8",
+    "shutter": "1/1600s",
+    "iso": "ISO 100"
+  },
+  "20260705_nil.jpg": {
+    "camera": "Canon EOS R50",
+    "lens": "RF50mm F1.8 STM",
+    "focal": "50mm",
+    "fnumber": "f/1.8",
+    "shutter": "1/320s",
+    "iso": "ISO 4000"
+  },
+  "20260728_fireworks.jpg": {
+    "camera": "Canon EOS R50",
+    "lens": "RF50mm F1.8 STM",
+    "focal": "50mm",
+    "fnumber": "f/22",
+    "shutter": "12s",
+    "iso": "ISO 100"
+  },
+  "202607_nil-2.jpg": {
+    "camera": "Canon EOS R50",
+    "lens": "RF50mm F1.8 STM",
+    "focal": "50mm",
+    "fnumber": "f/1.8",
+    "shutter": "1/400s",
+    "iso": "ISO 1600"
+  },
+  "202607_nil.jpg": {
+    "camera": "Canon EOS R50",
+    "lens": "RF50mm F1.8 STM",
+    "focal": "50mm",
+    "fnumber": "f/1.8",
+    "shutter": "1/400s",
+    "iso": "ISO 2500"
+  },
+  "202607_tokyo-station.jpg": {
+    "camera": "Canon EOS R50",
+    "lens": "RF50mm F1.8 STM",
+    "focal": "50mm",
+    "fnumber": "f/1.8",
+    "shutter": "1/200s",
+    "iso": "ISO 2500"
+  },
+  "20260819_Hi-Mochi.jpg": {
+    "camera": "Canon EOS R50",
+    "lens": "RF50mm F1.8 STM",
+    "focal": "50mm",
+    "fnumber": "f/2",
+    "shutter": "1/4000s",
+    "iso": "ISO 100"
+  },
+  "20260819_almost-there.jpg": {
+    "camera": "Canon EOS R50",
+    "lens": "RF50mm F1.8 STM",
+    "focal": "50mm",
+    "fnumber": "f/1.8",
+    "shutter": "1/250s",
+    "iso": "ISO 1000"
+  },
+  "20260819_solar-system.jpg": {
+    "camera": "Canon EOS R50",
+    "lens": "RF50mm F1.8 STM",
+    "focal": "50mm",
+    "fnumber": "f/1.8",
+    "shutter": "1/320s",
+    "iso": "ISO 160"
+  },
+  "20260826_cat-2.jpg": {
+    "camera": "Canon EOS R50",
+    "lens": "RF50mm F1.8 STM",
+    "focal": "50mm",
+    "fnumber": "f/1.8",
+    "shutter": "1/500s",
+    "iso": "ISO 3200"
+  },
+  "20260826_cat.jpg": {
+    "camera": "Canon EOS R50",
+    "lens": "RF50mm F1.8 STM",
+    "focal": "50mm",
+    "fnumber": "f/1.8",
+    "shutter": "1/500s",
+    "iso": "ISO 3200"
+  },
+  "20260826_nil.jpg": {
+    "camera": "Canon EOS R50",
+    "lens": "RF50mm F1.8 STM",
+    "focal": "50mm",
+    "fnumber": "f/1.8",
+    "shutter": "1/200s",
+    "iso": "ISO 500"
+  },
+  "20261008_crossing.jpg": {
+    "camera": "Sony α7C II",
+    "lens": "FE 50mm F1.4 GM",
+    "focal": "50mm",
+    "fnumber": "f/1.4",
+    "shutter": "1/320s",
+    "iso": "ISO 100"
+  },
+  "20261011_boat-landing.jpg": {
+    "camera": "Sony α7C II",
+    "lens": "FE 50mm F1.4 GM",
+    "focal": "50mm",
+    "fnumber": "f/1.4",
+    "shutter": "1/1600s",
+    "iso": "ISO 160"
+  },
+  "20261026_rainy-tower.jpg": {
+    "camera": "Sony α7C II",
+    "lens": "FE 50mm F1.4 GM",
+    "focal": "50mm",
+    "fnumber": "f/1.4",
+    "shutter": "1/200s",
+    "iso": "ISO 500"
+  },
+  "20261026_under-the-umbrella.jpg": {
+    "camera": "Sony α7C II",
+    "lens": "FE 50mm F1.4 GM",
+    "focal": "50mm",
+    "fnumber": "f/1.4",
+    "shutter": "1/200s",
+    "iso": "ISO 500"
+  },
+  "20261027_blue-hour.jpg": {
+    "camera": "Sony α7C II",
+    "lens": "FE 50mm F1.4 GM",
+    "focal": "50mm",
+    "fnumber": "f/1.6",
+    "shutter": "1/200s",
+    "iso": "ISO 200"
+  },
+  "20261027_telephone.jpg": {
+    "camera": "Sony α7C II",
+    "lens": "FE 50mm F1.4 GM",
+    "focal": "50mm",
+    "fnumber": "f/1.4",
+    "shutter": "1/40s",
+    "iso": "ISO 80"
+  },
+  "20261102_raindrops.jpg": {
+    "camera": "Sony α7C II",
+    "lens": "FE 50mm F1.4 GM",
+    "focal": "50mm",
+    "fnumber": "f/1.4",
+    "shutter": "1/800s",
+    "iso": "ISO 100"
+  },
+  "2026_opposite-world.jpg": {
+    "camera": "Canon EOS R50",
+    "lens": "RF50mm F1.8 STM",
+    "focal": "50mm",
+    "fnumber": "f/1.8",
+    "shutter": "1/250s",
+    "iso": "ISO 200"
+  }
+}

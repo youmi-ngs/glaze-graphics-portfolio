@@ -3,6 +3,10 @@
 // Hand-maintained — edit freely. Photography entries are derived from the
 // "YYYYMMDD_title" filenames in public/images/works/photos/; empty title = the
 // card shows the image only. `ar` = thumbnail aspect ratio (h/w) for the masonry.
+// `logo` (sites/apps without a screenshot) = shown small on a dark tile.
+// `date` = when it was made ("YYYYMM" or "YYYYMMDD"); photos take it from the
+// slug. The gallery sorts newest first; same-date works keep their order here
+// (so list the later one first).
 
 export const CATEGORIES = [
   { key: 'photography', label: 'Photography' },
@@ -12,15 +16,17 @@ export const CATEGORIES = [
 
 export const WORKS = [
   // ── design ────────────────────────────────────────────────────────────────
-  { slug: "logo", title: "Logo", category: "design", year: 2026, img: "/images/works/design/logo-color.jpg", images: ["/images/works/design/logo-color.jpg", "/images/works/design/logo-mono.jpg"], ar: 1, description: "" },
-  { slug: "golden-record", title: "Golden Record", category: "design", year: 2026, img: "/images/works/design/A26DC132_postcard-front.png", images: ["/images/works/design/A26DC132_postcard-front.png"], ar: 1.455, description: "", featured: 1 },
-  { slug: "astronaut", title: "Astronaut", category: "design", year: 2026, img: "/images/works/design/a26dc132_mask.jpg", images: ["/images/works/design/a26dc132_mask.jpg"], ar: 1.333, description: "" },
-  { slug: "kamon-hanabishi", title: "Kamon", category: "design", year: 2026, img: "/images/works/design/kamon-01_white.png", images: ["/images/works/design/kamon-01_white.png", "/images/works/design/kamon-01_black.png"], ar: 1, description: "" },
-  { slug: "kamon-kakuji", title: "Kamon", category: "design", year: 2026, img: "/images/works/design/kamon-02_white.png", images: ["/images/works/design/kamon-02_white.png", "/images/works/design/kamon-02_black.png"], ar: 1, description: "", featured: 6 },
-  { slug: "space-scene", title: "Space Scene", category: "design", year: 2026, img: "/images/works/design/hero.jpg", images: ["/images/works/design/hero.jpg"], ar: 0.625, description: "" },
+  { slug: "darupoyo-logo", title: "だるぽよ (Darupoyo)", category: "design", year: 2026, date: "202611", img: "/images/works/design/darupoyo-logo.png", images: ["/images/works/design/darupoyo-logo.png"], ar: 0.666, description: "Logo for だるぽよ (Darupoyo)." },
+  { slug: "logo", title: "Logo", category: "design", year: 2026, date: "202604", img: "/images/works/design/logo-color.jpg", images: ["/images/works/design/logo-color.jpg", "/images/works/design/logo-mono.jpg"], ar: 1, description: "" },
+  { slug: "golden-record", title: "Golden Record", category: "design", year: 2026, date: "202605", img: "/images/works/design/A26DC132_postcard-front.png", images: ["/images/works/design/A26DC132_postcard-front.png"], ar: 1.455, description: "", featured: 1 },
+  { slug: "astronaut", title: "Astronaut", category: "design", year: 2026, date: "202605", img: "/images/works/design/a26dc132_mask.jpg", images: ["/images/works/design/a26dc132_mask.jpg"], ar: 1.333, description: "" },
+  { slug: "kamon-hanabishi", title: "Kamon", category: "design", year: 2026, date: "202607", img: "/images/works/design/kamon-01_white.png", images: ["/images/works/design/kamon-01_white.png", "/images/works/design/kamon-01_black.png"], ar: 1, description: "" },
+  { slug: "kamon-kakuji", title: "Kamon", category: "design", year: 2026, date: "202607", img: "/images/works/design/kamon-02_white.png", images: ["/images/works/design/kamon-02_white.png", "/images/works/design/kamon-02_black.png"], ar: 1, description: "", featured: 6 },
+  { slug: "space-scene", title: "Space Scene", category: "design", year: 2026, date: "202608", img: "/images/works/design/hero.jpg", images: ["/images/works/design/hero.jpg"], ar: 0.625, description: "" },
 
   // ── others (sites & apps) ─────────────────────────────────────────────────
-  { slug: "sector-y", title: "Sector Y", category: "others", year: null, img: null, ar: 1.25, description: "My personal site — a hand-built gallery of photos, trips, and little sparkles.", link: "https://youmi.ngs.computer" },
+  { slug: "darupoyo", title: "だるぽよ (Darupoyo)", category: "others", year: 2026, date: "202611", img: null, logo: "/images/works/design/darupoyo-logo.png", ar: 1.25, description: "A web app built with team 温玉 — Nobuteru Mamiya, Maiko Zen, Marin Honoki and me. Won the LGTM Award at the GDGoC Hackathon Tokyo preliminary round. I also designed the logo.", link: "https://darupoyo.web.app" },
+  { slug: "sector-y", title: "Sector Y", category: "others", year: "2025 –", date: "202504", img: null, ar: 1.25, description: "My personal site — a hand-built gallery of photos, trips, and little sparkles.", link: "https://youmi.ngs.computer" },
 
   // ── photography ───────────────────────────────────────────────────────────
   { slug: "20261102-raindrops", title: "Raindrops", category: "photography", year: 2026, img: "/images/works/photos/20261102_raindrops.jpg", ar: 1.5, description: "" },
@@ -28,7 +34,7 @@ export const WORKS = [
   { slug: "20261027-blue-hour", title: "Blue Hour", category: "photography", year: 2026, img: "/images/works/photos/20261027_blue-hour.jpg", ar: 0.667, description: "" },
   { slug: "20261026-rainy-tower", title: "Rainy Tower", category: "photography", year: 2026, img: "/images/works/photos/20261026_rainy-tower.jpg", ar: 1.5, description: "" },
   { slug: "20261026-under-the-umbrella", title: "Under the Umbrella", category: "photography", year: 2026, img: "/images/works/photos/20261026_under-the-umbrella.jpg", ar: 1.5, description: "" },
-  { slug: "20261011-pier", title: "Pier", category: "photography", year: 2026, img: "/images/works/photos/20261011_pier.jpg", ar: 1.5, description: "" },
+  { slug: "20261011-boat-landing", title: "Boat Landing", category: "photography", year: 2026, img: "/images/works/photos/20261011_boat-landing.jpg", ar: 1.5, description: "" },
   { slug: "20261008-crossing", title: "Crossing", category: "photography", year: 2026, img: "/images/works/photos/20261008_crossing.jpg", ar: 0.667, description: "" },
   { slug: "20260826-cat-2", title: "Cat", category: "photography", year: 2026, img: "/images/works/photos/20260826_cat-2.jpg", ar: 1.501, description: "" },
   { slug: "20260826-cat", title: "Cat", category: "photography", year: 2026, img: "/images/works/photos/20260826_cat.jpg", ar: 1.501, description: "" },
@@ -79,6 +85,17 @@ export const WORKS = [
   { slug: "20230805-ray", title: "Ray", category: "photography", year: 2023, img: "/images/works/photos/20230805_ray.jpg", ar: 0.666, description: "" },
   { slug: "20230624-hydrangea", title: "Hydrangea", category: "photography", year: 2023, img: "/images/works/photos/20230624_hydrangea.JPG", ar: 0.666, description: "" },
 ];
+
+// Sortable "YYYYMMDD" key for when a work was made: `date` if set, else the
+// leading digits of the slug ("20260411-…", "202607-…", "2026-…"). Missing
+// month/day count as 00, so they sort after dated works of the same period.
+export function dateKey(work) {
+  const d = work.date ?? work.slug.match(/^\d{4,8}/)?.[0] ?? '';
+  return d.padEnd(8, '0');
+}
+
+// Works sorted newest first (stable: same-date works keep their data order).
+export const WORKS_BY_DATE = [...WORKS].sort((a, b) => dateKey(b).localeCompare(dateKey(a)));
 
 // Cosmic gradient placeholder class for a work with no image yet.
 export function placeholderClass(index) {
